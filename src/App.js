@@ -15,34 +15,24 @@ const App = () => {
 	const [storedValues, setStoredValues] = useState([]);
 
 	const generateResponse = async (newQuestion, setNewQuestion) => {
-		let options = {
-			model: 'text-davinci-003',
-			temperature: 0,
-			max_tokens: 100,
-			top_p: 1,
-			frequency_penalty: 0.0,
-			presence_penalty: 0.0,
-			stop: ['/'],
+		const options = {
+		  model: "gpt-3.5-turbo",
+		  messages: [{ role: "user", content: newQuestion }],
 		};
-
-		let completeOptions = {
-			...options,
-			prompt: newQuestion,
-		};
-
-		const response = await openai.createCompletion(completeOptions);
-
+	
+		const response = await openai.createChatCompletion(options);
+	
 		if (response.data.choices) {
-			setStoredValues([
-				{
-					question: newQuestion,
-					answer: response.data.choices[0].text,
-				},
-				...storedValues,
-			]);
-			setNewQuestion('');
+		  setStoredValues([
+			{
+			  question: newQuestion,
+			  answer: response.data.choices[0].message.content,
+			},
+			...storedValues,
+		  ]);
+		  setNewQuestion("");
 		}
-	};
+	  };
 
 	return (
 		<div>
