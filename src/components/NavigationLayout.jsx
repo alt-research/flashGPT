@@ -1,4 +1,4 @@
-import { Box, Grid, useTheme } from '@mui/material';
+import { Box, Grid } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 
 import Header from './Header';
@@ -23,8 +23,7 @@ const ContentArea = ({ hideHeader = false, hideSidebar = false }) => {
   );
 };
 
-const NavigationLayout = ({
-}) => {
+const NavigationLayout = () => {
   return (
     <>
       <Grid

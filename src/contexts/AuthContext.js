@@ -69,13 +69,17 @@ const CustAuthProvider = ({ children }) => {
   );
 };
 
-export const AuthProvider = ({ children }) => (
-  <Auth0Provider
-    audience={process.env.REACT_APP_AUTH0_AUDIENCE}
-    clientId={process.env.REACT_APP_AUTH0_CLIENT_ID}
-    domain={process.env.REACT_APP_AUTH0_DOMAIN}
-    redirectUri={window.location.origin + '/deploy'}
-  >
-    <CustAuthProvider>{children}</CustAuthProvider>
-  </Auth0Provider>
-);
+export const AuthProvider = ({ children }) => {
+  console.log('process.env: ', process.env);
+
+  return (
+    <Auth0Provider
+      audience={process.env.REACT_APP_AUTH0_AUDIENCE}
+      clientId={process.env.REACT_APP_AUTH0_CLIENT_ID}
+      domain={process.env.REACT_APP_AUTH0_DOMAIN}
+      redirectUri={window.location.origin + '/deploy'}
+    >
+      <CustAuthProvider>{children}</CustAuthProvider>
+    </Auth0Provider>
+  );
+};

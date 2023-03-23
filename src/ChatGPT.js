@@ -1,46 +1,54 @@
 import { Configuration, OpenAIApi } from 'openai';
 
-import FormSection from './components/FormSection';
 import AnswerSection from './components/AnswerSection';
+import FormSection from './components/FormSection';
 
+import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
+import SuspenseLoader from './components/SuspenseLoader';
 import { useAuthContext } from './contexts/AuthContext';
+
+const configuration = new Configuration({
+  apiKey: process.env.REACT_APP_OPENAI_API_KEY,
+});
+const openai = new OpenAIApi(configuration);
+const generateResponse = async ({ newQuestion, setNewQuestion }) => {
+  const options = {
+    model: 'gpt-3.5-turbo',
+    messages: [{ role: 'user', content: newQuestion }],
+  };
+
+  const response = await openai.createChatCompletion(options);
+
+  if (response.data.choices) {
+    setNewQuestion('');
+  }
+
+  return response;
+};
 
 const ChatGPT = () => {
   console.log('rendering openai generator');
-  const configuration = new Configuration({
-    apiKey: process.env.REACT_APP_OPENAI_API_KEY,
-  });
-
-  const openai = new OpenAIApi(configuration);
-
   const [storedValues, setStoredValues] = useState([]);
-
-  const generateResponse = async (newQuestion, setNewQuestion) => {
-    const options = {
-      model: 'gpt-3.5-turbo',
-      messages: [{ role: 'user', content: newQuestion }],
-    };
-
-    const response = await openai.createChatCompletion(options);
-
-    if (response.data.choices) {
+  const { isLoading, mutate } = useMutation(generateResponse, {
+    onSuccess: (response, variables) => {
+      console.log('variables: ', variables);
       setStoredValues([
         {
-          question: newQuestion,
+          question: variables?.newQuestion,
           answer: response.data.choices[0].message.content,
         },
         ...storedValues,
       ]);
-      setNewQuestion('');
-    }
-  };
+    },
+  });
 
   const { loginWithRedirect } = useAuthContext();
   const handleClickLogin = loginWithRedirect;
 
   return (
     <div>
+      {isLoading && <SuspenseLoader preventUserActions />}
       <div className="header-section">
         <h1>ChatGPT CLONE 🤖</h1>
         {storedValues.length < 1 && (
@@ -53,7 +61,11 @@ const ChatGPT = () => {
         )}
       </div>
 
-      <FormSection generateResponse={generateResponse} />
+      <FormSection
+        generateResponse={(newQuestion, setNewQuestion) => {
+          mutate({ newQuestion, setNewQuestion });
+        }}
+      />
 
       {storedValues.length > 0 && <AnswerSection storedValues={storedValues} />}
 
