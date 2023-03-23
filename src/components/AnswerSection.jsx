@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import MonacoEditor from 'react-monaco-editor';
 
 const AnswerSection = ({ storedValues }) => {
+
+
   const copyText = text => {
     navigator.clipboard.writeText(text);
   };
