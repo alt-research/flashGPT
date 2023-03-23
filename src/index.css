@@ -132,3 +132,11 @@ button {
 .copy-icon:hover {
   background-color: #CA228C;
 }
+
+.genesisAccount {
+  background-color: #373741;
+  padding: 0.5rem;
+  width: 24rem;
+  margin-bottom: 1rem;
+  color: #fff;
+}

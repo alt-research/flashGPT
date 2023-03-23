@@ -1,28 +1,59 @@
-import { Box, Button } from '@mui/material';
-import { instance } from './api';
-import { useMutation } from '@tanstack/react-query';
-import { useAlerts } from './contexts/AlertsContext';
+import { Box, CircularProgress, Typography } from '@mui/material';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import { useAccount, useSwitchNetwork } from 'wagmi';
+import { instance } from './api';
+import StepHeader from './components/StepHeader';
+import { useAlerts } from './contexts/AlertsContext';
+import { useWagmi } from './contexts/WagmiContext';
+import { getStatusLabel, STATUS } from './utils';
+import { goerli } from 'wagmi/chains';
 
 const createFL = async reqBody => {
   const res = await instance.post('/flashlayer/create', reqBody);
 
   return res?.data;
 };
+const fetchFlashLayerDetails = async ({ queryKey }) => {
+  const [, flashLayerId] = queryKey;
+  const res = await instance.get(`/flashlayer/info/${flashLayerId}`);
+
+  return res?.data;
+};
 
 const DeployFL = () => {
   const { setAlert } = useAlerts();
-  const { mutate, data } = useMutation(createFL, {
+  const { address, isConnecting, isDisconnected } = useAccount();
+  const { setChainsConfig } = useWagmi();
+  const {
+    chains,
+    error,
+    isLoading: isSwitching,
+    pendingChainId,
+    switchNetwork,
+  } = useSwitchNetwork({ onError: err => console.error('error switching: ', err) });
+  const [flashlayerId, setFlashlayerId] = useState('25');
+  const { mutate } = useMutation(createFL, {
     onSuccess: res => {
       setAlert('SUCCESS', 'Flash layer creation successfully initiated');
+      // setFlashlayerId(res?.id);
+      setFlashlayerId('25');
     },
   });
+  const { data, isLoading, isFetching } = useQuery(['get_fl_details', flashlayerId], {
+    queryFn: fetchFlashLayerDetails,
+    enabled: Boolean(flashlayerId),
+  });
+
   //** @todo use current wallet address as genesisAccount address */
   const randomName = 'gpt' + uuidv4().substring(0, 10).split('-').join('');
   console.log('randomName: ', randomName);
   return (
     <Box>
+      <StepHeader title="Deploy Flash Layer" step={1} sx={{ scrollMarginTop: '64px' }} />
+      <div>Contract deployer address (current account)</div>
+      <input variant="filled" className="genesisAccount" readOnly value={address} />
       <button
         className="btn"
         onClick={() => {
@@ -52,8 +83,47 @@ const DeployFL = () => {
           });
         }}
       >
-        Deploy
+        Deploy FlashLayer
       </button>
+      <StepHeader
+        title="Wait for Flash Layer deployment"
+        step={2}
+        sx={{ scrollMarginTop: '64px' }}
+      />
+      {isLoading && isFetching ? (
+        <CircularProgress size={25} />
+      ) : (
+        data && (
+          <div className="deploymentCard">
+            <div>
+              <span>Status: </span>
+              <span>{getStatusLabel(data?.flashlayer)}</span>
+            </div>
+            {data?.flashlayer?.status === STATUS.ACTIVE && (
+              <>
+                <div>
+                  <span>Explorer Url: </span>
+                  <span>{data?.flashlayer?.resources?.explorer}</span>
+                </div>
+                <div>
+                  <span>RPC Url: </span>
+                  <span>{data?.flashlayer?.resources?.rpc}</span>
+                </div>
+                <button
+                  className="btn"
+                  onClick={async () => {
+                    await setChainsConfig(prev => [...prev, goerli]);
+                    await switchNetwork(5);
+                  }}
+                >
+                  Add network
+                </button>
+              </>
+            )}
+          </div>
+        )
+      )}
+      <StepHeader title="Deploy contract" step={3} sx={{ scrollMarginTop: '64px' }} />
     </Box>
   );
 };
