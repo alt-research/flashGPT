@@ -13,7 +13,8 @@ const ContentArea = ({ hideHeader = false, hideSidebar = false }) => {
         transition: 'margin 0.2s',
         position: 'relative',
         zIndex: 5,
-        pt: 64,
+        mt: "64px",
+        pt: "2rem"
       }}
     >
       <Grid container flexDirection="column" flexGrow={1}>

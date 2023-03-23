@@ -1,8 +1,14 @@
+import { MutationCache, QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useRoutes } from 'react-router-dom';
 import { AlertsProvider, useAlerts } from './contexts/AlertsContext';
 import { AuthProvider } from './contexts/AuthContext';
-import { MutationCache, QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import routes from './router';
+
+import '@rainbow-me/rainbowkit/styles.css';
+
+import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
+import { WagmiConfig } from 'wagmi';
+import { WagmiProvider } from './contexts/WagmiContext';
 
 const App = () => {
   const content = useRoutes(routes);
@@ -55,7 +61,9 @@ const App = () => {
   return (
     <AlertsProvider>
       <QueryClientProviderWrapper>
-        <AuthProvider>{content}</AuthProvider>
+        <WagmiProvider>
+          <AuthProvider>{content}</AuthProvider>
+        </WagmiProvider>
       </QueryClientProviderWrapper>
     </AlertsProvider>
   );

@@ -2,6 +2,7 @@ import { Box, styled, useTheme } from '@mui/material';
 import { useState } from 'react';
 import AltlayerLogo from '../../assets/IconAltlayer';
 import { useAuthContext } from '../../contexts/AuthContext';
+import {ConnectButton} from '@rainbow-me/rainbowkit'
 
 import HeaderUserbox from './Userbox';
 
@@ -50,6 +51,7 @@ function Header() {
           },
         }}
       >
+        <ConnectButton/>
         {isAuthenticated && <HeaderUserbox />}
       </Box>
     </HeaderWrapper>
