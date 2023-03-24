@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/alt-research/flashGPT/compare/v1.0.1...v1.1.0) (2023-03-24)
+
+
+### Features
+
+* compile and deploy contract onto flash layer ([#11](https://github.com/alt-research/flashGPT/issues/11)) ([c2c261e](https://github.com/alt-research/flashGPT/commit/c2c261eddb33c1b54eb5ab555a12ddcac70fd1a1))
+
 ## [1.0.1](https://github.com/alt-research/flashGPT/compare/v1.0.0...v1.0.1) (2023-03-24)
 
 
