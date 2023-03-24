@@ -7,6 +7,23 @@
 
 * Added build for webserver version of dockerfile ([f43bb63](https://github.com/alt-research/flashGPT/commit/f43bb6313d8391fb3acc55a68fb432c5e389d837))
 
+
+### Bug Fixes
+
+* fix shebang ([3ec15dc](https://github.com/alt-research/flashGPT/commit/3ec15dc222d38678a394f8a3a56e1644063d4b98))
+
+
+### Miscellaneous Chores
+
+* **master:** release 1.3.0 ([c17d87e](https://github.com/alt-research/flashGPT/commit/c17d87e58692fb7d64d461da9ce0c59dfb90a8d2))
+
+## [1.3.0](https://github.com/alt-research/flashGPT/compare/v1.2.0...v1.3.0) (2023-03-24)
+
+
+### Features
+
+* Added build for webserver version of dockerfile ([f43bb63](https://github.com/alt-research/flashGPT/commit/f43bb6313d8391fb3acc55a68fb432c5e389d837))
+
 ## [1.2.0](https://github.com/alt-research/flashGPT/compare/v1.1.0...v1.2.0) (2023-03-24)
 
 
