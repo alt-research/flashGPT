@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.4.0](https://github.com/alt-research/flashGPT/compare/v1.3.0...v1.4.0) (2023-03-24)
+
+
+### Features
+
+* upgrade_release_please ([4cad9b6](https://github.com/alt-research/flashGPT/commit/4cad9b6c0ed4698288f0fd4642015b074a71c4be))
+
+
+### Bug Fixes
+
+* fix shebang ([3ec15dc](https://github.com/alt-research/flashGPT/commit/3ec15dc222d38678a394f8a3a56e1644063d4b98))
+
+
+### Miscellaneous Chores
+
+* **master:** release 1.3.0 ([b6f67c8](https://github.com/alt-research/flashGPT/commit/b6f67c88984aa5468733019d56dd83f4cd6bd20f))
+
 ## [1.3.0](https://github.com/alt-research/flashGPT/compare/v1.2.0...v1.3.0) (2023-03-24)
 
 
