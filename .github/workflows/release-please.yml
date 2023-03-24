@@ -37,7 +37,7 @@ jobs:
           bump-minor-pre-major: true
   # https://docs.github.com/en/actions/using-workflows/reusing-workflows
   trigger-builder:
-    uses: ./.github/workflows/build-extract-static-to-s3.yml
+    uses: ./.github/workflows/build-push-ecr.yml
     needs: release-please
     if: ${{ needs.release-please.outputs.release_created }}
     with:
