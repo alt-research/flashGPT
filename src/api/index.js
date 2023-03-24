@@ -2,7 +2,7 @@ import { authUtil } from './auth';
 import axios from 'axios';
 
 export const instance = axios.create({
-  baseURL: process.env.REACT_APP_API_BASE_URL,
+  baseURL: window.appConfig.baseUrl,
 });
 
 instance.interceptors.request.use(config => {
