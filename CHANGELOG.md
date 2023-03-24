@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.0](https://github.com/alt-research/flashGPT/compare/v1.4.0...v1.5.0) (2023-03-24)
+
+
+### Features
+
+* fixed launch script. ([bc39d16](https://github.com/alt-research/flashGPT/commit/bc39d16da2260ac7c4f9fb3361062c2a4fc8d5bc))
+
 ## [1.4.0](https://github.com/alt-research/flashGPT/compare/v1.3.0...v1.4.0) (2023-03-24)
 
 
