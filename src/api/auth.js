@@ -17,7 +17,7 @@ export const authUtil = (() => {
 
 export const updateAccessToken = async getAccessTokenSilently => {
   const accessToken = await getAccessTokenSilently({
-    audience: process.env.REACT_APP_AUTH0_AUDIENCE,
+    audience: window.appConfig.auth0Audience,
   });
 
   authUtil.setAccessToken(accessToken);
