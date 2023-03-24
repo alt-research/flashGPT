@@ -1,0 +1,45 @@
+on:
+  push:
+    branches:
+      - master
+    workflow_dispatch:
+name: release-please
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+    steps:
+      - uses: google-github-actions/release-please-action@v3
+        id: release
+        # Reference: https://github.com/google-github-actions/release-please-action/blob/069d7229d7b10308de85bc606a91e0033e259c8e/action.yml
+        with:
+          release-type: node
+          package-name: release-please-action
+          # changlelog commit types
+          changelog-types: |
+            [
+              { "type": "feat", "section": "Features", "hidden": false },
+              { "type": "fix", "section": "Bug Fixes", "hidden": false },
+              { "type": "perf", "section": "Performance Improvements", "hidden": false },
+              { "type": "deps", "section": "Dependencies", "hidden": false },
+              { "type": "revert", "section": "Reverts", "hidden": false },
+              { "type": "docs", "section": "Documentation", "hidden": false },
+              { "type": "style", "section": "Styles", "hidden": false },
+              { "type": "chore", "section": "Miscellaneous Chores", "hidden": false },
+              { "type": "refactor", "section": "Code Refactoring", "hidden": false },
+              { "type": "test", "section": "Tests", "hidden": false },
+              { "type": "build", "section": "Build System", "hidden": false },
+              { "type": "ci", "section": "Continuous Integration", "hidden": false }
+            ]
+          # should breaking changes before 1.0.0 produce minor bumps
+          bump-minor-pre-major: true
+  # https://docs.github.com/en/actions/using-workflows/reusing-workflows
+  trigger-builder:
+    uses: ./.github/workflows/build-extract-static-to-s3.yml
+    needs: release-please
+    if: ${{ needs.release-please.outputs.release_created }}
+    with:
+      tag: ${{ needs.release-please.outputs.tag_name }}
+    secrets: inherit
