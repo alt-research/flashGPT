@@ -1,0 +1,63 @@
+name: Build and extract files to push to S3
+
+on:
+  release:
+    types: [published]
+  push:
+    tags: ['*']
+    # branches: [master]
+    # branches: [release]
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      tag:
+        required: false
+        type: string
+
+env:
+  APPLICATION_NAME: "flashgpt-frontend"
+
+jobs:
+  build_extract_and_push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
+
+      - name: Build Dockerfile
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile
+          push: false
+          tags: "${{ env.APPLICATION_NAME }}:${{ github.sha }}"
+
+      - name: Extract File from Build Dockerfile Step
+        run: |
+          rm -rf "${{ env.APPLICATION_NAME }}-artifact"
+          mkdir -p "${{ env.APPLICATION_NAME }}-artifact/build"
+          docker create --name extractbuild "${{ env.APPLICATION_NAME }}:${{ github.sha }}"
+          docker cp "extractbuild:/usr/share/nginx/html/." "$(pwd)/${{ env.APPLICATION_NAME }}-artifact/build"
+          rm -rf "${{ env.APPLICATION_NAME}}-artifact/build/config.json"
+      - name: Compress Extracted Files
+        working-directory: "${{ env.APPLICATION_NAME }}-artifact/build"
+        run: |
+          echo "${{ github.sha }}" > "${{ env.APPLICATION_NAME }}-artifact-commit.txt"
+          zip -r "${{ env.APPLICATION_NAME }}-artifact.zip" .
+      - name: Push Compressed Static Files to S3
+        working-directory: "${{ env.APPLICATION_NAME }}-artifact/build"
+        run: |
+          aws s3 sync . "s3://${{ env.APPLICATION_NAME }}-static-artifact" --exclude='*' "--include=${{ env.APPLICATION_NAME }}-artifact.zip"
+      - name: Push Commit and Date to date_created.txt on S3 Bucket
+        working-directory: "${{ env.APPLICATION_NAME }}-artifact/build"
+        run: |
+          echo "${{ github.sha }}" > date_created.txt
+          echo $(date) >> date_created.txt
+          aws s3 sync . "s3://${{ env.APPLICATION_NAME }}-static-artifact" --exclude='*' "--include=date_created.txt"
