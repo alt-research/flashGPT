@@ -2,9 +2,8 @@ import { useState } from 'react';
 
 const defaultInput = [
   'You are Solidity smart contract developer.',
-  'Write a `MyToken` contract which is a sample ERC20PresetMinterPauser contract.',
-  'ERC20PresetMinterPauser has two constructor arguments: name and symbol.',
-  'It must use `import @openzeppelin/contracts/token/ERC20/presets/ERC20PresetMinterPauser.sol` exactly',
+  'Write a `MyToken` contract which is an ERC20 contract.',
+  'Name is MyToken and symbol is MTK.',
   'It should only use solidity version 0.8.18.',
   'Provide contract codes with SPDX-License without elaboration.',
 ].join('\n');

@@ -6,7 +6,6 @@ import FormSection from './components/FormSection';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import SuspenseLoader from './components/SuspenseLoader';
-import { useAuthContext } from './contexts/AuthContext';
 
 const configuration = new Configuration({
   apiKey: process.env.REACT_APP_OPENAI_API_KEY,
@@ -43,9 +42,6 @@ const ChatGPT = () => {
     },
   });
 
-  const { loginWithRedirect } = useAuthContext();
-  const handleClickLogin = loginWithRedirect;
-
   return (
     <div>
       {isLoading && <SuspenseLoader preventUserActions />}
@@ -68,10 +64,6 @@ const ChatGPT = () => {
       />
 
       {storedValues.length > 0 && <AnswerSection storedValues={storedValues} />}
-
-      <button className="btn" onClick={handleClickLogin}>
-        Login to deploy this contract
-      </button>
     </div>
   );
 };
