@@ -1,14 +1,19 @@
 import React, { useState } from 'react';
 import MonacoEditor from 'react-monaco-editor';
+import { useAuthContext } from '../contexts/AuthContext';
 
 const AnswerSection = ({ storedValues }) => {
-
-
+  const { loginWithRedirect } = useAuthContext();
   const copyText = text => {
     navigator.clipboard.writeText(text);
   };
-
-
+  const [code, setCode] = useState('');
+  const options = {
+    selectOnLineNumbers: true,
+  };
+  const onChange = newVal => {
+    setCode(newVal)
+  };
   const editorDidMount = answer => (editor, monaco) => {
     console.log('editorDidMount', editor);
     const answerArr = answer.split('```');
@@ -20,13 +25,9 @@ const AnswerSection = ({ storedValues }) => {
     }
     editor.focus();
   };
-
-  const [code, setCode] = useState('');
-  const options = {
-    selectOnLineNumbers: true,
-  };
-  const onChange = newVal => {
-    setCode(newVal)
+  const handleClickLogin = () => {
+    localStorage.setItem("contract_code", code)
+    loginWithRedirect()
   };
 
   return (
@@ -61,6 +62,9 @@ const AnswerSection = ({ storedValues }) => {
           );
         })}
       </div>
+      <button className="btn" onClick={handleClickLogin}>
+        Login to deploy this contract
+      </button>
     </>
   );
 };
