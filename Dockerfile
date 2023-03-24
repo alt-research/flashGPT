@@ -7,9 +7,6 @@ COPY package-lock.json ./
 RUN npm install
 
 COPY . ./
-RUN npm run build
 
-FROM nginx:stable-alpine as production-stage
-COPY --from=build-stage /app/build /usr/share/nginx/html/
-EXPOSE 80
-ENTRYPOINT ["nginx", "-g", "daemon off;"]
+EXPOSE 3000
+CMD ["./scripts/launch.sh"]
