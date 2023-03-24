@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/alt-research/flashGPT/compare/v1.1.0...v1.2.0) (2023-03-24)
+
+
+### Features
+
+* add other chains with checkbox to bypass switching to flashlayer ([#13](https://github.com/alt-research/flashGPT/issues/13)) ([825f744](https://github.com/alt-research/flashGPT/commit/825f7449434e2faecaefd972d1b6855d188f21f8))
+
 ## [1.1.0](https://github.com/alt-research/flashGPT/compare/v1.0.1...v1.1.0) (2023-03-24)
 
 
