@@ -254,7 +254,7 @@ const DeployFL = () => {
             name="useCurrentNetwork"
             type="checkbox"
             className="btn"
-            value={shouldUseCurrentNetwork}
+            checked={shouldUseCurrentNetwork}
             onClick={e => {
               setShouldUseCurrentNetwork(e?.target?.checked);
             }}
