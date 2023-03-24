@@ -14,7 +14,7 @@ const FormSection = ({ generateResponse }) => {
 
   return (
     <div className="form-section">
-      <div><span>Api Key: </span><input className='apiKey' placeholder="Your OpenAI API Key" value={apiKey} onChange={(e)=>{setApiKey(e?.target?.value)}}/></div>
+      <div><span>Api Key: </span><input type="password" className='apiKey' placeholder="Your OpenAI API Key" value={apiKey} onChange={(e)=>{setApiKey(e?.target?.value)}}/></div>
       <textarea
         rows="5"
         className="form-control"
