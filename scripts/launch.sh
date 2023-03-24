@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 
 if [ -z "$S3_CONFIG_BUCKET_NAME" ]
 then
