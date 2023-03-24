@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/alt-research/flashGPT/compare/v1.0.0...v1.0.1) (2023-03-24)
+
+
+### Continuous Integration
+
+* use appConfig.js instead of .env ([#9](https://github.com/alt-research/flashGPT/issues/9)) ([30fb053](https://github.com/alt-research/flashGPT/commit/30fb0534ccc1f3d964645116b68de33ab72b5e0a))
+
 ## 1.0.0 (2023-03-24)
 
 
