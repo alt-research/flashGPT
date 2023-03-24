@@ -7,11 +7,11 @@ import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import SuspenseLoader from './components/SuspenseLoader';
 
-const configuration = new Configuration({
-  apiKey: process.env.REACT_APP_OPENAI_API_KEY,
-});
-const openai = new OpenAIApi(configuration);
-const generateResponse = async ({ newQuestion, setNewQuestion }) => {
+const generateResponse = async ({ newQuestion, setNewQuestion, apiKey }) => {
+  const configuration = new Configuration({
+    apiKey,
+  });
+  const openai = new OpenAIApi(configuration);
   const options = {
     model: 'gpt-3.5-turbo',
     messages: [{ role: 'user', content: newQuestion }],
@@ -58,8 +58,8 @@ const ChatGPT = () => {
       </div>
 
       <FormSection
-        generateResponse={(newQuestion, setNewQuestion) => {
-          mutate({ newQuestion, setNewQuestion });
+        generateResponse={(newQuestion, setNewQuestion, apiKey) => {
+          mutate({ newQuestion, setNewQuestion, apiKey });
         }}
       />
 

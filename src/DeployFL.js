@@ -2,7 +2,7 @@ import { Box, CircularProgress } from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { useAccount, useSigner, useSwitchNetwork } from 'wagmi';
+import { useAccount, useNetwork, useSigner, useSwitchNetwork } from 'wagmi';
 import { instance } from './api';
 import StepHeader from './components/StepHeader';
 import { useAlerts } from './contexts/AlertsContext';
@@ -29,6 +29,7 @@ const loadVersions = async () => {
 };
 
 const compileAndDeploy = async ({ code, signer }) => {
+  const [_matchedString, contractName] = code.match(/contract (.+) is/);
   const versions = await getCompilerVersions();
   console.log('versions: ', versions.releases);
   const compiled = await solidityCompiler({
@@ -44,7 +45,7 @@ const compileAndDeploy = async ({ code, signer }) => {
   });
   console.log('compiled: ', compiled);
 
-  const { abi, evm } = compiled?.contracts?.Compiled_Contracts?.MyToken;
+  const { abi, evm } = compiled?.contracts?.Compiled_Contracts?.[contractName];
 
   console.log('evm: ', evm);
   console.log('bytecode obj: ', evm?.bytecode);
@@ -70,16 +71,19 @@ const DeployFL = () => {
   const { data: signer } = useSigner();
   console.log('chains: ', chains);
   console.log('chainsConfig: ', chainsConfig);
-
-  const { switchNetwork } = useSwitchNetwork({
+  const { chain: currentChain } = useNetwork();
+  const { switchNetwork, isLoading: isSwitchingNetwork } = useSwitchNetwork({
     onError: err => console.error('error switching network: ', err),
   });
-  const [flashlayerId, setFlashlayerId] = useState('32');
+  const [flashlayerId, setFlashlayerId] = useState(localStorage.getItem('prev_fl_id'));
   const { mutate } = useMutation(createFL, {
     onSuccess: res => {
-      setAlert('SUCCESS', 'Flash layer creation successfully initiated');
-      // setFlashlayerId(res?.id);
-      setFlashlayerId('29');
+      setAlert(
+        'SUCCESS',
+        `Flash layer creation successfully initiated. Your Flash Layer ID: ${res?.id}`
+      );
+      setFlashlayerId(res?.id);
+      localStorage.setItem('prev_fl_id', res?.id);
     },
   });
   const {
@@ -89,8 +93,6 @@ const DeployFL = () => {
   } = useMutation(compileAndDeploy, {
     onSuccess: res => {
       setAlert('SUCCESS', `Contract successfully deployed at: ${res.address}`);
-      // setFlashlayerId(res?.id);
-      setFlashlayerId('32');
     },
   });
   const { data, isLoading, isFetching } = useQuery(['get_fl_details', flashlayerId], {
@@ -181,6 +183,17 @@ const DeployFL = () => {
         step={2}
         sx={{ scrollMarginTop: '64px' }}
       />
+      <div>
+        <span>Already deployed a flash layer previously? Enter its ID here: </span>
+        <input
+          variant="filled"
+          className="flashlayerId"
+          onChange={e => {
+            setFlashlayerId(e?.target?.value);
+          }}
+          value={flashlayerId}
+        />
+      </div>
       {isLoading && isFetching ? (
         <CircularProgress size={25} />
       ) : (
@@ -192,17 +205,19 @@ const DeployFL = () => {
             </div>
             {data?.flashlayer?.status === STATUS.ACTIVE && (
               <>
-                <div>
-                  <span>Chain ID: </span>
-                  <span>{data?.flashlayer?.resources?.chainId}</span>
-                </div>
-                <div>
-                  <span>Explorer Url: </span>
-                  <span>{data?.flashlayer?.resources?.explorer}</span>
-                </div>
-                <div>
-                  <span>RPC Url: </span>
-                  <span>{data?.flashlayer?.resources?.rpc}</span>
+                <div className="rpcInfo">
+                  <div>
+                    <span>Chain ID: </span>
+                    <span>{data?.flashlayer?.resources?.chainId}</span>
+                  </div>
+                  <div>
+                    <span>Explorer Url: </span>
+                    <span>{data?.flashlayer?.resources?.explorer}</span>
+                  </div>
+                  <div>
+                    <span>RPC Url: </span>
+                    <span>{data?.flashlayer?.resources?.rpc}</span>
+                  </div>
                 </div>
                 <button
                   className="btn"
@@ -217,7 +232,7 @@ const DeployFL = () => {
                     }
                   }}
                 >
-                  Add network
+                  Switch to this network
                 </button>
               </>
             )}
@@ -225,29 +240,41 @@ const DeployFL = () => {
         )
       )}
       <StepHeader title="Deploy contract" step={3} sx={{ scrollMarginTop: '64px' }} />
-      <MonacoEditor
-        width="800"
-        height="300"
-        language="javascript"
-        theme="vs-dark"
-        value={code}
-        options={options}
-        onChange={onChange}
-      />
-      <button
-        className="btn"
-        onClick={() => {
-          deployContract({ code, signer });
-          // const { interface: abi, bytecode } = require('./compile');
-          // console.log('interface: ', abi);
-        }}
-      >
-        Compile and Deploy
-      </button>
+      {isSwitchingNetwork ? (
+        <CircularProgress size={25} />
+      ) : currentChain?.id !== Number(data?.flashlayer?.resources?.chainId) ? (
+        <div>Please switch to the flash layer network in the previous step.</div>
+      ) : (
+        <>
+          <MonacoEditor
+            width="800"
+            height="500"
+            language="javascript"
+            theme="vs-dark"
+            value={code}
+            options={options}
+            onChange={onChange}
+          />
+          <button
+            className="btn"
+            onClick={() => {
+              deployContract({ code, signer });
+              // const { interface: abi, bytecode } = require('./compile');
+              // console.log('interface: ', abi);
+            }}
+          >
+            Compile and Deploy
+          </button>
+        </>
+      )}
       {isDeploying ? (
         <CircularProgress size={25} />
       ) : (
-        deployedContract && <div>Contract has been deployed at: {deployedContract?.address}</div>
+        deployedContract && (
+          <div style={{ marginTop: '1rem' }}>
+            Your contract has been deployed at: {deployedContract?.address}
+          </div>
+        )
       )}
     </Box>
   );

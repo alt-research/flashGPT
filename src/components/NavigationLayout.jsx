@@ -39,6 +39,7 @@ const NavigationLayout = () => {
       >
         <Header />
         <ContentArea />
+        <div className="footer"></div>
       </Grid>
     </>
   );
