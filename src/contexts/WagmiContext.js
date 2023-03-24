@@ -1,9 +1,18 @@
 import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit';
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { configureChains, createClient, WagmiConfig } from 'wagmi';
-import { arbitrum, mainnet, optimism, polygon } from 'wagmi/chains';
-import { alchemyProvider } from 'wagmi/providers/alchemy';
+import {
+  arbitrum,
+  gnosis,
+  gnosisChiado,
+  mainnet,
+  optimism,
+  polygon,
+  polygonMumbai,
+  polygonZkEvmTestnet,
+} from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
+import { CUSTOM_CHAINS } from '../constants';
 
 export const WagmiContext = createContext({});
 
@@ -13,12 +22,19 @@ export const useWagmi = () => {
 
 export const WagmiProvider = ({ children }) => {
   console.log('wagmi provider rerendering');
-  const [chainsConfig, setChainsConfig] = useState([mainnet, polygon, optimism, arbitrum]);
-
-  const { chains: configuredChains, provider } = configureChains(chainsConfig, [
-    // alchemyProvider({ apiKey: process.env.ALCHEMY_ID }),
-    publicProvider(),
+  const [chainsConfig, setChainsConfig] = useState([
+    mainnet,
+    polygon,
+    optimism,
+    arbitrum,
+    polygonMumbai,
+    polygonZkEvmTestnet,
+    gnosis,
+    gnosisChiado,
+    ...CUSTOM_CHAINS,
   ]);
+
+  const { chains: configuredChains, provider } = configureChains(chainsConfig, [publicProvider()]);
   const [chains, setChains] = useState(configuredChains);
 
   const { connectors: defaultConnectors } = getDefaultWallets({
@@ -33,10 +49,7 @@ export const WagmiProvider = ({ children }) => {
   const [client, setClient] = useState(initialClient);
 
   useEffect(() => {
-    const { chains, provider } = configureChains(chainsConfig, [
-      //   alchemyProvider({ apiKey: process.env.ALCHEMY_ID }),
-      publicProvider(),
-    ]);
+    const { chains, provider } = configureChains(chainsConfig, [publicProvider()]);
     setChains(chains);
     const { connectors } = getDefaultWallets({
       appName: 'My RainbowKit App',
