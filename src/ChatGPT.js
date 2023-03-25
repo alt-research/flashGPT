@@ -53,10 +53,10 @@ const ChatGPT = () => {
             <b>generate Solidity smart contracts</b> and{' '}
             <b>deploy them to Layer 1 and 2 solutions</b> such as AltLayer flashlayer,Arbitrum,
             Ethereum, Gnosis, Polygon, Polygon zkEVM testnet, Optimism and Scroll alpha testnet.
-            This is be a game-changer in the world of blockchain development. With this dApp,
-            developers could leverage the natural language processing capabilities of GPT to create
-            efficient, secure, and reliable smart contracts that can be easily deployed to L1/L2
-            solutions, making the <b>entire process seamless and straightforward</b>.<br></br>
+            This is a game-changer in the world of blockchain development. With this app, developers
+            could leverage the natural language processing capabilities of GPT to create efficient,
+            secure, and reliable smart contracts that can be easily deployed to L1/L2 solutions,
+            making the <b>entire process seamless and straightforward</b>.<br></br>
             <br></br>
             <br></br>
           </p>
