@@ -19,7 +19,8 @@ const AnswerSection = ({ storedValues }) => {
     const answerArr = answer.split('```');
     if (answerArr?.length === 3) {
       console.log('answerArr: ', answerArr);
-      setCode(answerArr[1]);
+      const solidityCode = answerArr[1].startsWith("solidity")?answerArr[1].replace("solidity","") : answerArr[1];
+      setCode(solidityCode);
     } else {
       setCode(answer);
     }

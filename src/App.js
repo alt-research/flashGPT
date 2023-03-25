@@ -6,8 +6,6 @@ import routes from './router';
 
 import '@rainbow-me/rainbowkit/styles.css';
 
-import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
-import { WagmiConfig } from 'wagmi';
 import { WagmiProvider } from './contexts/WagmiContext';
 
 const App = () => {

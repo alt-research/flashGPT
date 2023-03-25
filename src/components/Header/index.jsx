@@ -1,8 +1,9 @@
-import { Box, styled, useTheme } from '@mui/material';
-import { useState } from 'react';
+import { Box, styled } from '@mui/material';
+import { ConnectButton, useConnectModal } from '@rainbow-me/rainbowkit';
+import { useReducer, useState } from 'react';
+import { useAccount } from 'wagmi';
 import AltlayerLogo from '../../assets/IconAltlayer';
 import { useAuthContext } from '../../contexts/AuthContext';
-import {ConnectButton} from '@rainbow-me/rainbowkit'
 
 import HeaderUserbox from './Userbox';
 
@@ -22,9 +23,17 @@ const HeaderWrapper = styled(Box)(
 `
 );
 
+const WrappedConnectButton = () => {
+
+  // This line is required as a hacky fix to rerender the connect button when connected
+  const _unused = useAccount({onConnect: () => {console.log("CONNECTED")}, onDisconnect: () => {console.log("DISCONNECTED")}});
+
+  const [_, forceUpdate] = useReducer(x => x + 1, 0);
+
+  return <ConnectButton onClick={() => setTimeout(forceUpdate)}/>
+}
+
 function Header() {
-  const theme = useTheme();
-  const [walletWidgetOpen, setWalletWidgetOpen] = useState(false);
   const { isAuthenticated } = useAuthContext();
 
   return (
@@ -51,7 +60,7 @@ function Header() {
           },
         }}
       >
-        <ConnectButton/>
+       <WrappedConnectButton/> 
         {isAuthenticated && <HeaderUserbox />}
       </Box>
     </HeaderWrapper>
