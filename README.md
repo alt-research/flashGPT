@@ -1,4 +1,10 @@
 
+# FlashGPT
+
+FlashGPT utilizes the power of OpenAI's GPT language model to generate Solidity smart contracts and deploy them to Layer 1 and 2 solutions such as AltLayer flashlayer,Arbitrum, Ethereum, Gnosis, Polygon, Polygon zkEVM testnet, Optimism and Scroll alpha testnet.q
+
+This is be a game-changer in the world of blockchain development. With this dApp, developers could leverage the natural language processing capabilities of GPT to create efficient, secure, and reliable smart contracts that can be easily deployed to L1/L2 solutions, making the entire process seamless and straightforward. The use of GPT would also help reduce the time and effort needed for smart contract development, which could result in faster project completion and reduced costs. Overall, this dApp would enable developers to create and deploy smart contracts with ease, paving the way for the next generation of blockchain applications.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
@@ -6,7 +12,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ## Available Scripts
 
 In the project directory, you can run:
-
+vm
 ### `npm start`
 
 Runs the app in the development mode.\
