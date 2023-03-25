@@ -24,24 +24,15 @@ const fetchFlashLayerDetails = async ({ queryKey }) => {
   return res?.data;
 };
 
-const loadVersions = async () => {
-  const { releases, latestRelease, builds } = await getCompilerVersions();
-};
-
 const compileAndDeploy = async ({ code, signer }) => {
   const [_matchedString, contractName] = code.match(/contract (.+) is/);
+  console.log('contract name: ', contractName);
   const versions = await getCompilerVersions();
-  console.log('versions: ', versions.releases);
+  console.log('versions: ', versions?.releases);
   const compiled = await solidityCompiler({
     // version: `https://binaries.soliditylang.org/bin/${usingVersion}`,
     version: 'https://binaries.soliditylang.org/bin/soljson-v0.8.18+commit.87f61d96.js',
     contractBody: code,
-    options: {
-      optimizer: {
-        enabled: true,
-        runs: 200,
-      },
-    },
   });
   console.log('compiled: ', compiled);
 
@@ -63,19 +54,44 @@ const options = {
   selectOnLineNumbers: true,
 };
 
+const SwitchNetworkButton = ({ flashLayerChainInfo }) => {
+  const { setChainsConfig, chains, chainsConfig } = useWagmi();
+  console.log('chains: ', chains);
+  console.log('chainsConfig: ', chainsConfig);
+  const { switchNetwork } = useSwitchNetwork({
+    onError: err => console.error('error switching network: ', err),
+  });
+  return (
+    <button
+      className="btn"
+      onClick={async () => {
+        if (!chains?.find(cur => cur.id === flashLayerChainInfo?.id)) {
+          await setChainsConfig(prev => [...prev, flashLayerChainInfo]);
+          setTimeout(() => {
+            switchNetwork(flashLayerChainInfo?.id);
+          }, 500);
+        } else {
+          await switchNetwork(flashLayerChainInfo?.id);
+        }
+      }}
+    >
+      Switch to this network
+    </button>
+  );
+};
+
 const DeployFL = () => {
   const { setAlert } = useAlerts();
   const [code, setCode] = useState(localStorage.getItem('contract_code'));
-  const { address, isDisconnected } = useAccount();
-  const { setChainsConfig, chains, chainsConfig } = useWagmi();
+  const { address, isDisconnected, isConnecting } = useAccount();
+  console.log('isConnecting: ', isConnecting);
+  console.log('isDisconnected: ', isDisconnected);
+
   const { data: signer } = useSigner();
-  console.log('chains: ', chains);
-  console.log('chainsConfig: ', chainsConfig);
+
   const { chain: currentChain } = useNetwork();
   const [shouldUseCurrentNetwork, setShouldUseCurrentNetwork] = useState(false);
-  const { switchNetwork, isLoading: isSwitchingNetwork } = useSwitchNetwork({
-    onError: err => console.error('error switching network: ', err),
-  });
+
   const [flashlayerId, setFlashlayerId] = useState(localStorage.getItem('prev_fl_id'));
   const { mutate } = useMutation(createFL, {
     onSuccess: res => {
@@ -221,80 +237,62 @@ const DeployFL = () => {
                     <span>{data?.flashlayer?.resources?.rpc}</span>
                   </div>
                 </div>
-                <button
-                  className="btn"
-                  onClick={async () => {
-                    if (!chains?.find(cur => cur.id === flashLayerChainInfo?.id)) {
-                      await setChainsConfig(prev => [...prev, flashLayerChainInfo]);
-                      setTimeout(() => {
-                        switchNetwork(flashLayerChainInfo?.id);
-                      }, 500);
-                    } else {
-                      await switchNetwork(flashLayerChainInfo?.id);
-                    }
-                  }}
-                >
-                  Switch to this network
-                </button>
+                <SwitchNetworkButton flashLayerChainInfo={flashLayerChainInfo} />
               </>
             )}
           </div>
         )
       )}
       <StepHeader title="Deploy contract" step={3} sx={{ scrollMarginTop: '64px' }} />
-      {isSwitchingNetwork ? (
-        <CircularProgress size={25} />
-      ) : (
-        <>
-          {!shouldUseCurrentNetwork &&
-            currentChain?.id !== Number(data?.flashlayer?.resources?.chainId) && (
-              <div>Please switch to the flash layer network in the previous step.</div>
-            )}
-          <input
-            name="useCurrentNetwork"
-            type="checkbox"
-            className="btn"
-            checked={shouldUseCurrentNetwork}
-            onClick={e => {
-              setShouldUseCurrentNetwork(e?.target?.checked);
-            }}
-          ></input>
-          <label
-            htmlFor="useCurrentNetwork"
-            onClick={() => {
-              setShouldUseCurrentNetwork(prev => !prev);
-            }}
-            style={{ paddingLeft: '1rem' }}
-          >
-            I do not want to deploy this contract on a Flash Layer. Deploy it to my current (EVM
-            Compatible) network.
-          </label>
-          {(currentChain?.id === Number(data?.flashlayer?.resources?.chainId) ||
-            shouldUseCurrentNetwork) && (
-            <>
-              <MonacoEditor
-                width="800"
-                height="500"
-                language="javascript"
-                theme="vs-dark"
-                value={code}
-                options={options}
-                onChange={onChange}
-              />
-              <button
-                className="btn"
-                onClick={() => {
-                  deployContract({ code, signer });
-                  // const { interface: abi, bytecode } = require('./compile');
-                  // console.log('interface: ', abi);
-                }}
-              >
-                Compile and Deploy
-              </button>
-            </>
+      <>
+        {!shouldUseCurrentNetwork &&
+          currentChain?.id !== Number(data?.flashlayer?.resources?.chainId) && (
+            <div>Please switch to the flash layer network in the previous step.</div>
           )}
-        </>
-      )}
+        <input
+          name="useCurrentNetwork"
+          type="checkbox"
+          className="btn"
+          checked={shouldUseCurrentNetwork}
+          onClick={e => {
+            setShouldUseCurrentNetwork(e?.target?.checked);
+          }}
+        ></input>
+        <label
+          htmlFor="useCurrentNetwork"
+          onClick={() => {
+            setShouldUseCurrentNetwork(prev => !prev);
+          }}
+          style={{ paddingLeft: '1rem' }}
+        >
+          I do not want to deploy this contract on a Flash Layer. Deploy it to my current (EVM
+          Compatible) network.
+        </label>
+        {(Number(currentChain?.id) === Number(data?.flashlayer?.resources?.chainId) ||
+          shouldUseCurrentNetwork) && (
+          <>
+            <MonacoEditor
+              width="800"
+              height="500"
+              language="javascript"
+              theme="vs-dark"
+              value={code}
+              options={options}
+              onChange={onChange}
+            />
+            <button
+              className="btn"
+              onClick={() => {
+                deployContract({ code, signer });
+                // const { interface: abi, bytecode } = require('./compile');
+                // console.log('interface: ', abi);
+              }}
+            >
+              Compile and Deploy
+            </button>
+          </>
+        )}
+      </>
       {isDeploying ? (
         <CircularProgress size={25} />
       ) : (

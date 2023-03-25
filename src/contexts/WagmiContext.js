@@ -49,6 +49,7 @@ export const WagmiProvider = ({ children }) => {
   const [client, setClient] = useState(initialClient);
 
   useEffect(() => {
+    console.log('running wagmi provider useeffect');
     const { chains, provider } = configureChains(chainsConfig, [publicProvider()]);
     setChains(chains);
     const { connectors } = getDefaultWallets({
