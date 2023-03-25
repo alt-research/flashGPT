@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.1](https://github.com/alt-research/flashGPT/compare/v1.5.0...v1.5.1) (2023-03-25)
+
+
+### Bug Fixes
+
+* buggy connect button, rename chatgpt-clone to flash-gpt ([#20](https://github.com/alt-research/flashGPT/issues/20)) ([4713049](https://github.com/alt-research/flashGPT/commit/4713049ae527dda8beb1e213532cb83a62c09f84))
+
 ## [1.5.0](https://github.com/alt-research/flashGPT/compare/v1.4.0...v1.5.0) (2023-03-24)
 
 
