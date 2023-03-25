@@ -1,6 +1,6 @@
 {
   "name": "flash-gpt",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "private": true,
   "dependencies": {
     "@agnostico/browser-solidity-compiler": "^0.1.1",
