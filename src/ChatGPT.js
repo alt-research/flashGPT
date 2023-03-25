@@ -46,15 +46,32 @@ const ChatGPT = () => {
     <div>
       {isLoading && <SuspenseLoader preventUserActions />}
       <div className="header-section">
-        <h1>ChatGPT CLONE 🤖</h1>
+        <h1>FlashGPT</h1>
         {storedValues.length < 1 && (
           <p>
-            I am an automated question and answer system, designed to assist you in finding relevant
-            information. You are welcome to ask me any queries you may have, and I will do my utmost
-            to offer you a reliable response. Kindly keep in mind that I am a machine and operate
-            solely based on programmed algorithms.
+            FlashGPT utilizes the power of OpenAI's GPT language model to{' '}
+            <b>generate Solidity smart contracts</b> and{' '}
+            <b>deploy them to Layer 1 and 2 solutions</b> such as AltLayer flashlayer,Arbitrum,
+            Ethereum, Gnosis, Polygon, Polygon zkEVM testnet, Optimism and Scroll alpha testnet.
+            This is be a game-changer in the world of blockchain development. With this dApp,
+            developers could leverage the natural language processing capabilities of GPT to create
+            efficient, secure, and reliable smart contracts that can be easily deployed to L1/L2
+            solutions, making the <b>entire process seamless and straightforward</b>.<br></br>
+            <br></br>
+            <br></br>
           </p>
         )}
+        <p>
+          <h2>Getting started</h2>
+          <br></br>
+          1. Sign up for an account at <a href="https://platform.openai.com/">OpenAI</a> and
+          following the sign-up process
+          <br></br>
+          2. Generate an OpenAI API keynavigating to your profile and selecting the "View API keys"
+          option. <br></br>
+          3. Key it into the designated field on this page. (we do not store your API keys remotely
+          for security purposes)
+        </p>
       </div>
 
       <FormSection

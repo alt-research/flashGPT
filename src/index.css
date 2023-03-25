@@ -6,6 +6,15 @@
   box-sizing: border-box;
 }
 
+a:link {
+  color: rgb(255, 255, 255);
+}
+
+/* visited link */
+a:visited {
+  color: rgb(255, 255, 255);
+}
+
 body {
   font-family: 'Poppins', sans-serif;
   background: #1D1E20;
