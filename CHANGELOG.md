@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.3](https://github.com/alt-research/flashGPT/compare/v1.5.2...v1.5.3) (2023-03-25)
+
+
+### Miscellaneous Chores
+
+* fix description ([#25](https://github.com/alt-research/flashGPT/issues/25)) ([3808423](https://github.com/alt-research/flashGPT/commit/3808423c0c0ba92677c1fd3db2981f030f113c5a))
+
 ## [1.5.2](https://github.com/alt-research/flashGPT/compare/v1.5.1...v1.5.2) (2023-03-25)
 
 
