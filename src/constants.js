@@ -4,7 +4,7 @@ export const STORAGE_KEYS = {
 
 export const CUSTOM_CHAINS = [
   {
-    id: '534353',
+    id: '0x82751',
     name: 'Scroll Alpha Testnet',
     network: 'Scroll Alpha Testnet',
     nativeCurrency: {
