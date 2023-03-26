@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.5.4](https://github.com/alt-research/flashGPT/compare/v1.5.3...v1.5.4) (2023-03-26)
+
+
+### Bug Fixes
+
+* scroll network chain id hex issue ([#30](https://github.com/alt-research/flashGPT/issues/30)) ([6d64efe](https://github.com/alt-research/flashGPT/commit/6d64efe420d744c101e3a767e99bbd091c508f57))
+
+
+### Miscellaneous Chores
+
+* add licence ([#29](https://github.com/alt-research/flashGPT/issues/29)) ([fee0d38](https://github.com/alt-research/flashGPT/commit/fee0d38df02ff3556d66985540f545c5a3efbddf))
+* fix readme typo ([#27](https://github.com/alt-research/flashGPT/issues/27)) ([c05a925](https://github.com/alt-research/flashGPT/commit/c05a9258c0de874ea114ed3bebe05590047485b4))
+
 ## [1.5.3](https://github.com/alt-research/flashGPT/compare/v1.5.2...v1.5.3) (2023-03-25)
 
 
