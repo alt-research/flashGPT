@@ -1,6 +1,9 @@
+import { getCompilerVersions, solidityCompiler } from '@agnostico/browser-solidity-compiler';
 import { Box, CircularProgress } from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { ContractFactory } from 'ethers';
 import { useMemo, useState } from 'react';
+import MonacoEditor from 'react-monaco-editor/lib/editor';
 import { v4 as uuidv4 } from 'uuid';
 import { useAccount, useNetwork, useSigner, useSwitchNetwork } from 'wagmi';
 import { instance } from './api';
@@ -8,9 +11,6 @@ import StepHeader from './components/StepHeader';
 import { useAlerts } from './contexts/AlertsContext';
 import { useWagmi } from './contexts/WagmiContext';
 import { getStatusLabel, STATUS } from './utils';
-import { getCompilerVersions, solidityCompiler } from '@agnostico/browser-solidity-compiler';
-import { ContractFactory } from 'ethers';
-import MonacoEditor from 'react-monaco-editor/lib/editor';
 
 const createFL = async reqBody => {
   const res = await instance.post('/flashlayer/create', reqBody);
@@ -25,7 +25,7 @@ const fetchFlashLayerDetails = async ({ queryKey }) => {
 };
 
 const compileAndDeploy = async ({ code, signer }) => {
-  const [_matchedString, contractName] = code.match(/contract (.+) is/);
+  const [, contractName] = code.match(/contract (.+) is/);
   console.log('contract name: ', contractName);
   const versions = await getCompilerVersions();
   console.log('versions: ', versions?.releases);

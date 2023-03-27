@@ -1,6 +1,6 @@
 import { Box, styled } from '@mui/material';
-import { ConnectButton, useConnectModal } from '@rainbow-me/rainbowkit';
-import { useReducer, useState } from 'react';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { useReducer } from 'react';
 import { useAccount } from 'wagmi';
 import AltlayerLogo from '../../assets/IconAltlayer';
 import { useAuthContext } from '../../contexts/AuthContext';
@@ -26,9 +26,9 @@ const HeaderWrapper = styled(Box)(
 const WrappedConnectButton = () => {
 
   // This line is required as a hacky fix to rerender the connect button when connected
-  const _unused = useAccount({onConnect: () => {console.log("CONNECTED")}, onDisconnect: () => {console.log("DISCONNECTED")}});
+  useAccount({onConnect: () => {console.log("CONNECTED")}, onDisconnect: () => {console.log("DISCONNECTED")}});
 
-  const [_, forceUpdate] = useReducer(x => x + 1, 0);
+  const [, forceUpdate] = useReducer(x => x + 1, 0);
 
   return <ConnectButton onClick={() => setTimeout(forceUpdate)}/>
 }
