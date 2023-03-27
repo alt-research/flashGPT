@@ -1,6 +1,9 @@
+import { getCompilerVersions, solidityCompiler } from '@agnostico/browser-solidity-compiler';
 import { Box, CircularProgress } from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { ContractFactory } from 'ethers';
 import { useMemo, useState } from 'react';
+import MonacoEditor from 'react-monaco-editor/lib/editor';
 import { v4 as uuidv4 } from 'uuid';
 import { useAccount, useNetwork, useSigner, useSwitchNetwork } from 'wagmi';
 import { instance } from './api';
@@ -8,9 +11,6 @@ import StepHeader from './components/StepHeader';
 import { useAlerts } from './contexts/AlertsContext';
 import { useWagmi } from './contexts/WagmiContext';
 import { getStatusLabel, STATUS } from './utils';
-import { getCompilerVersions, solidityCompiler } from '@agnostico/browser-solidity-compiler';
-import { ContractFactory } from 'ethers';
-import MonacoEditor from 'react-monaco-editor/lib/editor';
 
 const createFL = async reqBody => {
   const res = await instance.post('/flashlayer/create', reqBody);
@@ -25,8 +25,7 @@ const fetchFlashLayerDetails = async ({ queryKey }) => {
 };
 
 const compileAndDeploy = async ({ code, signer }) => {
-  const [_matchedString, contractName] = code.match(/contract (.+) is/);
-  console.log('contract name: ', contractName);
+  const [, contractName] = code.match(/contract (.+) is/);
   const versions = await getCompilerVersions();
   console.log('versions: ', versions?.releases);
   const compiled = await solidityCompiler({
@@ -38,15 +37,10 @@ const compileAndDeploy = async ({ code, signer }) => {
 
   const { abi, evm } = compiled?.contracts?.Compiled_Contracts?.[contractName];
 
-  console.log('evm: ', evm);
-  console.log('bytecode obj: ', evm?.bytecode);
-  console.log('signer: ', signer);
-
   const factory = new ContractFactory(abi, evm?.bytecode, signer);
 
   const contract = await factory.deploy(/**deployArgs*/);
-  console.log(contract.address);
-  console.log(contract.deployTransaction);
+  console.log('deployed contract at: ', contract.address);
   return contract;
 };
 
@@ -55,9 +49,8 @@ const options = {
 };
 
 const SwitchNetworkButton = ({ flashLayerChainInfo }) => {
-  const { setChainsConfig, chains, chainsConfig } = useWagmi();
+  const { setChainsConfig, chains } = useWagmi();
   console.log('chains: ', chains);
-  console.log('chainsConfig: ', chainsConfig);
   const { switchNetwork } = useSwitchNetwork({
     onError: err => console.error('error switching network: ', err),
   });
@@ -83,9 +76,7 @@ const SwitchNetworkButton = ({ flashLayerChainInfo }) => {
 const DeployFL = () => {
   const { setAlert } = useAlerts();
   const [code, setCode] = useState(localStorage.getItem('contract_code'));
-  const { address, isDisconnected, isConnecting } = useAccount();
-  console.log('isConnecting: ', isConnecting);
-  console.log('isDisconnected: ', isDisconnected);
+  const { address, isDisconnected } = useAccount();
 
   const { data: signer } = useSigner();
 
@@ -141,7 +132,6 @@ const DeployFL = () => {
 
   //** @todo use current wallet address as genesisAccount address */
   const randomName = 'gpt' + uuidv4().substring(0, 10).split('-').join('');
-  console.log('randomName: ', randomName);
 
   const onChange = newVal => {
     setCode(newVal);
@@ -284,8 +274,6 @@ const DeployFL = () => {
               className="btn"
               onClick={() => {
                 deployContract({ code, signer });
-                // const { interface: abi, bytecode } = require('./compile');
-                // console.log('interface: ', abi);
               }}
             >
               Compile and Deploy

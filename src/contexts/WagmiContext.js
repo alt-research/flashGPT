@@ -21,7 +21,6 @@ export const useWagmi = () => {
 };
 
 export const WagmiProvider = ({ children }) => {
-  console.log('wagmi provider rerendering');
   const [chainsConfig, setChainsConfig] = useState([
     mainnet,
     polygon,
@@ -49,7 +48,6 @@ export const WagmiProvider = ({ children }) => {
   const [client, setClient] = useState(initialClient);
 
   useEffect(() => {
-    console.log('running wagmi provider useeffect');
     const { chains, provider } = configureChains(chainsConfig, [publicProvider()]);
     setChains(chains);
     const { connectors } = getDefaultWallets({
