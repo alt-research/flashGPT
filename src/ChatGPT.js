@@ -27,11 +27,9 @@ const generateResponse = async ({ newQuestion, setNewQuestion, apiKey }) => {
 };
 
 const ChatGPT = () => {
-  console.log('rendering openai generator');
   const [storedValues, setStoredValues] = useState([]);
   const { isLoading, mutate } = useMutation(generateResponse, {
     onSuccess: (response, variables) => {
-      console.log('variables: ', variables);
       setStoredValues([
         {
           question: variables?.newQuestion,

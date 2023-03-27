@@ -26,7 +26,6 @@ const fetchFlashLayerDetails = async ({ queryKey }) => {
 
 const compileAndDeploy = async ({ code, signer }) => {
   const [, contractName] = code.match(/contract (.+) is/);
-  console.log('contract name: ', contractName);
   const versions = await getCompilerVersions();
   console.log('versions: ', versions?.releases);
   const compiled = await solidityCompiler({
@@ -38,15 +37,10 @@ const compileAndDeploy = async ({ code, signer }) => {
 
   const { abi, evm } = compiled?.contracts?.Compiled_Contracts?.[contractName];
 
-  console.log('evm: ', evm);
-  console.log('bytecode obj: ', evm?.bytecode);
-  console.log('signer: ', signer);
-
   const factory = new ContractFactory(abi, evm?.bytecode, signer);
 
   const contract = await factory.deploy(/**deployArgs*/);
-  console.log(contract.address);
-  console.log(contract.deployTransaction);
+  console.log('deployed contract at: ', contract.address);
   return contract;
 };
 
@@ -55,9 +49,8 @@ const options = {
 };
 
 const SwitchNetworkButton = ({ flashLayerChainInfo }) => {
-  const { setChainsConfig, chains, chainsConfig } = useWagmi();
+  const { setChainsConfig, chains } = useWagmi();
   console.log('chains: ', chains);
-  console.log('chainsConfig: ', chainsConfig);
   const { switchNetwork } = useSwitchNetwork({
     onError: err => console.error('error switching network: ', err),
   });
@@ -83,9 +76,7 @@ const SwitchNetworkButton = ({ flashLayerChainInfo }) => {
 const DeployFL = () => {
   const { setAlert } = useAlerts();
   const [code, setCode] = useState(localStorage.getItem('contract_code'));
-  const { address, isDisconnected, isConnecting } = useAccount();
-  console.log('isConnecting: ', isConnecting);
-  console.log('isDisconnected: ', isDisconnected);
+  const { address, isDisconnected } = useAccount();
 
   const { data: signer } = useSigner();
 
@@ -141,7 +132,6 @@ const DeployFL = () => {
 
   //** @todo use current wallet address as genesisAccount address */
   const randomName = 'gpt' + uuidv4().substring(0, 10).split('-').join('');
-  console.log('randomName: ', randomName);
 
   const onChange = newVal => {
     setCode(newVal);
@@ -284,8 +274,6 @@ const DeployFL = () => {
               className="btn"
               onClick={() => {
                 deployContract({ code, signer });
-                // const { interface: abi, bytecode } = require('./compile');
-                // console.log('interface: ', abi);
               }}
             >
               Compile and Deploy
