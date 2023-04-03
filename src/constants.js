@@ -4,7 +4,25 @@ export const STORAGE_KEYS = {
 
 export const CUSTOM_CHAINS = [
   {
-    id: '0x82751',
+    id: 9990,
+    name: 'Altlayer Alpha Devnet',
+    network: 'Altlayer Alpha Devnet',
+    nativeCurrency: {
+      decimals: 18,
+      name: 'ALT',
+      symbol: 'ALT',
+    },
+    rpcUrls: {
+      public: { http: ['https://devnet-rpc.altlayer.io'] },
+      default: { http: ['https://devnet-rpc.altlayer.io'] },
+    },
+    blockExplorers: {
+      default: { name: 'Devnet Explorer', url: 'https://devnet-explorer.altlayer.io/' },
+    },
+    contracts: {},
+  },
+  {
+    id: 534353,
     name: 'Scroll Alpha Testnet',
     network: 'Scroll Alpha Testnet',
     nativeCurrency: {
