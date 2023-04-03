@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.1](https://github.com/alt-research/flashGPT/compare/v1.6.0...v1.6.1) (2023-04-03)
+
+
+### Bug Fixes
+
+* custom chains not working and showing wrong network ([#34](https://github.com/alt-research/flashGPT/issues/34)) ([96bc988](https://github.com/alt-research/flashGPT/commit/96bc98869b3d86ada44b7ce411a07013e334891c))
+
 ## [1.6.0](https://github.com/alt-research/flashGPT/compare/v1.5.4...v1.6.0) (2023-04-03)
 
 
