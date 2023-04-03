@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.6.0](https://github.com/alt-research/flashGPT/compare/v1.5.4...v1.6.0) (2023-04-03)
+
+
+### Features
+
+* change favicon logo to altlayer ([#33](https://github.com/alt-research/flashGPT/issues/33)) ([f89e3ab](https://github.com/alt-research/flashGPT/commit/f89e3abba8106d7808114fdf626aa52628d38774))
+
+
+### Code Refactoring
+
+* linting and formatting ([#31](https://github.com/alt-research/flashGPT/issues/31)) ([10f319e](https://github.com/alt-research/flashGPT/commit/10f319e8c2121d19540ffc79edbda062968c560d))
+
 ## [1.5.4](https://github.com/alt-research/flashGPT/compare/v1.5.3...v1.5.4) (2023-03-26)
 
 
